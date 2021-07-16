@@ -10,7 +10,7 @@
 #include "event_handler.h"
 #include "render.h"
 
-int main()
+int main(int argc, char *argv[])
 {
     // initiallize the window and the game parameters
     Window window = init::window();
@@ -38,4 +38,11 @@ int main()
     SDL_Quit();                         // cleans up subsystem intialization on exit
 
     return 0;
+}
+
+// Windows support yay :/
+
+int WinMain(int argc, char* argv[])
+{
+    return main(argc, argv);
 }
