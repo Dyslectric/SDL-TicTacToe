@@ -21,6 +21,9 @@ void eventHandler(SDL_Event event, GameState &state)
 
 void gameInput(const int tile, GameState &state)
 {
+    if(tile == -1)
+        return;
+
     if(state.state == STATE_PLAYING)
     {
         if(state.gameBoard[tile] == TILE_NONE)
