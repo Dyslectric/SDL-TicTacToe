@@ -11,6 +11,6 @@
 
 void    eventHandler(SDL_Event event, GameState &state);
 void    gameInput(const int tile, GameState &state);
-int     calculateState(const GameState state);
+void    calculateState(GameState &state);
 
 #endif

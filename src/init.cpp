@@ -13,6 +13,10 @@ GameState init::game_state()
         state.gameBoard[i] = TILE_NONE;
     }
 
+    state.winningColumn = -1;
+    state.winningRow    = -1;
+    state.winningDiag   = -1;
+
     return state;
 }
 

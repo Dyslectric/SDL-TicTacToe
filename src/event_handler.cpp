@@ -39,24 +39,94 @@ void gameInput(const int tile, GameState &state)
             }
         }
 
-        state.state = calculateState(state);
+        calculateState(state);
 
-        if(state.state == STATE_CROSS_WIN)
+        if(state.winningColumn != -1)
         {
-            for(int tile = 0; tile < 9; tile++)
+            if(state.winningColumn == 0)
             {
-                if(state.gameBoard[tile] == TILE_CIRCLE)
+                for(int tile = 1; tile < 9; tile += 3)
+                {
+                    state.gameBoard[tile] = TILE_NONE;
+                }
+                for(int tile = 2; tile < 9; tile += 3)
+                {
+                    state.gameBoard[tile] = TILE_NONE;
+                }
+            }
+            if(state.winningColumn == 1)
+            {
+                for(int tile = 0; tile < 9; tile += 3)
+                {
+                    state.gameBoard[tile] = TILE_NONE;
+                }
+                for(int tile = 2; tile < 9; tile += 3)
+                {
+                    state.gameBoard[tile] = TILE_NONE;
+                }
+            }
+            if(state.winningColumn == 2)
+            {
+                for(int tile = 0; tile < 9; tile += 3)
+                {
+                    state.gameBoard[tile] = TILE_NONE;
+                }
+                for(int tile = 1; tile < 9; tile += 3)
                 {
                     state.gameBoard[tile] = TILE_NONE;
                 }
             }
         }
-
-        if(state.state == STATE_CIRCLE_WIN)
+        if(state.winningRow != -1)
         {
-            for(int tile = 0; tile < 9; tile++)
+            if(state.winningRow == 0)
             {
-                if(state.gameBoard[tile] == TILE_CROSS)
+                for(int tile = 3; tile < 9; tile += 1)
+                {
+                    state.gameBoard[tile] = TILE_NONE;
+                }
+            }
+            if(state.winningRow == 1)
+            {
+                for(int tile = 0; tile < 3; tile += 1)
+                {
+                    state.gameBoard[tile] = TILE_NONE;
+                }
+                for(int tile = 6; tile < 9; tile += 1)
+                {
+                    state.gameBoard[tile] = TILE_NONE;
+                }
+            }
+            if(state.winningRow == 2)
+            {
+                for(int tile = 0; tile < 6; tile += 1)
+                {
+                    state.gameBoard[tile] = TILE_NONE;
+                }
+            }
+        }
+        if(state.winningDiag != -1)
+        {
+            if(state.winningDiag == 0)
+            {
+                for(int tile = 1; tile < 4; tile++)
+                {
+                    state.gameBoard[tile] = TILE_NONE;
+                }
+                for(int tile = 5; tile < 8; tile++)
+                {
+                    state.gameBoard[tile] = TILE_NONE;
+                }
+            }
+            if(state.winningDiag == 1)
+            {
+                for(int tile = 0; tile < 2; tile++)
+                {
+                    state.gameBoard[tile] = TILE_NONE;
+                }
+                state.gameBoard[3] = TILE_NONE;
+                state.gameBoard[5] = TILE_NONE;
+                for(int tile = 7; tile < 9; tile++)
                 {
                     state.gameBoard[tile] = TILE_NONE;
                 }
@@ -66,12 +136,11 @@ void gameInput(const int tile, GameState &state)
 
     else
     {
-        std::cout << "test" << std::endl;
         state = init::game_state();
     }
 }
 
-int calculateState(const GameState state)
+void calculateState(GameState &state)
 {
     int win = false;
     int tie = false;
@@ -105,6 +174,7 @@ int calculateState(const GameState state)
                 state.gameBoard[tile + 6] == player)
             {
                 win = true;
+                state.winningColumn = column;
                 break;
             }
         }
@@ -115,6 +185,7 @@ int calculateState(const GameState state)
                 state.gameBoard[tile + 2] == player)
             {
                 win = true;
+                state.winningRow = row;
                 break;
             }
         }
@@ -123,17 +194,22 @@ int calculateState(const GameState state)
         {
             if
             (
-                (   
-                    state.gameBoard[tile - 4] == player &&
-                    state.gameBoard[tile + 4] == player
-                ) ||
+                state.gameBoard[tile - 4] == player &&
+                state.gameBoard[tile + 4] == player
+            ) 
+            {
+                win = true;
+                state.winningDiag = 0;
+                break;
+            }
+            if
                 (   
                     state.gameBoard[tile - 2] == player &&
                     state.gameBoard[tile + 2] == player
                 )
-            )
             {
                 win = true;
+                state.winningDiag = 1;
                 break;
             }
         }
@@ -153,18 +229,17 @@ int calculateState(const GameState state)
     {
         if(player == TILE_CROSS)
         {
-            return STATE_CROSS_WIN;
+            state.state = STATE_CROSS_WIN;
         }
         if(player == TILE_CIRCLE)
         {
-            return STATE_CIRCLE_WIN;
+            state.state = STATE_CIRCLE_WIN;
         }
     }
 
     else if(tie == true)
     {
-        return STATE_TIE;
+        state.state = STATE_TIE;
     }
 
-    else return STATE_PLAYING;
 }
