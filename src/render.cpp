@@ -2,6 +2,7 @@
 
 #include "render.h"
 
+// this is actually pretty simple and I don't feel like commenting on it
 void render(Window window, GameState state)
 {
     SDL_RenderClear(window.renderer);

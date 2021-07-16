@@ -1,7 +1,9 @@
-// handles the events of the game during blanks
+// handles input events, processes game logic on tile basis
 
 #include "event_handler.h"
 
+// handles sdl events and sends them into gameInput as a tile index
+// tools::get_tile translates the mouse's x and y position into a tile index
 void eventHandler(SDL_Event event, GameState &state)
 {
     while(SDL_PollEvent(&event))
@@ -19,8 +21,11 @@ void eventHandler(SDL_Event event, GameState &state)
     }
 }
 
+// handles input on a tile basis so that game logic is more simply programmed
 void gameInput(const int tile, GameState &state)
 {
+    // if a suitable tile is not clicked, get_tile will return -1
+    // this will cause gameInput to access unallocated memory, use this return to fix
     if(tile == -1)
         return;
 
@@ -44,6 +49,9 @@ void gameInput(const int tile, GameState &state)
 
         calculateState(state);
 
+        //
+        //  yeah, is there a better way to do this? post an issue if you know.
+        //
         if(state.winningColumn != -1)
         {
             if(state.winningColumn == 0)
@@ -139,10 +147,14 @@ void gameInput(const int tile, GameState &state)
 
     else
     {
+        // if the game state is not playing, the game is over.
+        // clicking in this state will reset the board, and restart the game.
         state = init::game_state();
     }
 }
 
+// goes through the game board and runs a win checking and
+// tie checking algorithm and returns the state as such
 void calculateState(GameState &state)
 {
     int win = false;
