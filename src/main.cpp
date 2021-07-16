@@ -28,7 +28,10 @@ int main()
         lastRefresh = tools::uptime();
 
         render(window, state);
-
     }
+
+    SDL_DestroyWindow(window.window);
+    SDL_Quit();
+
     return 0;
 }
